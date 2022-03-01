@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2 # 更新代码
       - name: run
-        uses: appleboy/ssh-action@master # ssh连接
+        uses: appleboy/ssh-action@master # ssh 连接
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
