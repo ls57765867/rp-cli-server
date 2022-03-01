@@ -1,0 +1,41 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# github actions 中文文档 https://docs.github.com/cn/actions/getting-started-with-github-actions
+
+name: deploy for dev
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+    paths:
+      - '.github/workflows/*'
+      - 'app/**'
+      - 'config/**'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'bin/*'
+      - '/**/*'
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # 更新代码
+      - name: run
+        uses: appleboy/ssh-action@master # ssh连接
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWD }}
+          command_timeout: 5m
+          script: |
+            cd /home/work/rp-cli-server;
+            # git remote add origin https://github.com/ls57765867/rp-cli-server.git;
+            # git checkout main;
+            git pull origin main; # 重新下载最新代码
+            # git remote remove origin; # 删除 origin ，否则会暴露 github 密码
+            # 启动 docker
+            docker-compose build node-server; # 和 docker-compose.yml service 名字一致
+            docker-compose up -d;

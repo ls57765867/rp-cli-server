@@ -1,0 +1,25 @@
+version: '3'  # 版本号 无所谓
+services:
+  rp-cli-server: # service name 不重复即可
+    # 就是 docker build -t image(下面第八行填入的字段) .
+    build:
+      context: . # 当前目录
+      dockerfile: Dockerfile # 基于 Dockerfile 构建
+    image: rp-cli-server # 依赖于当前 Dockerfile 创建出来的镜像
+    container_name: rp-cli-server
+    ports:
+      - 7001:7001
+  rp-cli-mongo:
+    image: mongo # 引用官网 mongo 镜像
+    container_name: rp-cli-mongo
+    restart: always # 宕机是否重启
+    # 等于 docker -v xxx：xxx
+    volumes:
+      - '.docker-volumes/mongo/data:/data/db' # 数据持久化
+    # 设置env
+    # mongodb连接一版需要 host port和dbName
+    environment:
+      - MONGO_INITDB_DATABASE=dbName
+      - TZ=Asia/Shanghai # 设置时区
+    ports:
+      - '27016:27017' # 宿主机可以用 127.0.0.1:27016 即可连接容器中的数据库
