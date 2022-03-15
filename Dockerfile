@@ -1,9 +1,9 @@
 FROM node:16
 #docker运行时工作的目录（不是当前项目的目录）
-WORKDIR /app
+WORKDIR /rp-cli-server
 #复制当前目录的内容到 /app
 #不需要的文件放到 dockerigrnone
-COPY . /app
+COPY . /rp-cli-server
 
 #构建镜像时，安装必备的软件，可能有多个RUN
 # 设置时区
